@@ -59,7 +59,7 @@ The application utilizes built-in motion sensors (gyroscope and accelerometer) t
 | Week | Date Range | What we did this week |
 | :---: | :---: | :--- |
 | **W01** | Oct 14 – Oct 20 | Set up repository and finalized project description, feature scope, and implementation order. |
-| **W02** | Oct 21 – Oct 27 | |
+| **W02** | Oct 21 – Oct 27 | Flutter project setup (Android + Linux), live gyroscope/accelerometer readout running on a physical phone, CI building a debug APK. |
 | **W03** | Oct 28 – Nov 03 | |
 | **W04** | Nov 04 – Nov 10 | |
 | **W05** | Nov 11 – Nov 17 | |
