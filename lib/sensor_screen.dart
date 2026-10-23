@@ -47,7 +47,7 @@ class _SensorScreenState extends State<SensorScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('VibeWave')),
       body: ListView(
-        padding: const EdgeInsetsSensorScreen.all(16),
+        padding: const EdgeInsets.all(16),
         children: [
           _SensorCard(title: 'Gyroscope', unit: 'rad/s', stream: _gyroscope),
           const SizedBox(height: 16),
