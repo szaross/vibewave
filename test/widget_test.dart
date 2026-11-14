@@ -17,5 +17,6 @@ void main() {
     expect(find.text('VibeWave'), findsOneWidget);
     expect(find.textContaining('Gyroscope'), findsOneWidget);
     expect(find.textContaining('Accelerometer'), findsOneWidget);
+    expect(find.text('Start test (440 Hz)'), findsOneWidget);
   });
 }

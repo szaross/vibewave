@@ -62,7 +62,7 @@ The application utilizes built-in motion sensors (gyroscope and accelerometer) t
 | **W02** | Oct 21 – Oct 27 | Flutter project setup (Android + Linux), live gyroscope/accelerometer readout running on a physical phone, CI building a debug APK. |
 | **W03** | Oct 28 – Nov 03 | |
 | **W04** | Nov 04 – Nov 10 | |
-| **W05** | Nov 11 – Nov 17 | |
+| **W05** | Nov 11 – Nov 17 | Finished sensor integration: live gyroscope and accelerometer readout, plus a 440 Hz sine test tone that can be started and stopped. |
 | **W06** | Nov 18 – Nov 24 | |
 | **W07** | Nov 25 – Dec 01 | |
 | **W08** | Dec 02 – Dec 08 | |

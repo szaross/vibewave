@@ -1,9 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
-import 'player.dart';
+
+import 'sine_player.dart';
 
 typedef Vector3 = ({double x, double y, double z});
 
@@ -22,16 +21,13 @@ class SensorScreen extends StatefulWidget {
   State<SensorScreen> createState() => _SensorScreenState();
 }
 
-
 class _SensorScreenState extends State<SensorScreen> {
   Stream<Vector3>? _gyroscope;
   Stream<Vector3>? _accelerometer;
 
-  final SoundPlayer _soundPlayer = SoundPlayer();
-  StreamSubscription<Vector3>? _accelSubscription;
-  
-  bool _isAudioEnabled = false;
-  double _currentFrequency = 440.0;
+  final SinePlayer _sine = SinePlayer();
+  late final AppLifecycleListener _lifecycle;
+  bool _isTestBusy = false;
 
   @override
   void initState() {
@@ -48,84 +44,63 @@ class _SensorScreenState extends State<SensorScreen> {
                 samplingPeriod: SensorInterval.uiInterval,
               )
             : null);
-    Future<void> _initAudio() async {
-    await _soundPlayer.init();
-    }
-    _initAudio();
     _gyroscope = gyroscope?.map((e) => (x: e.x, y: e.y, z: e.z));
-    DateTime _lastPlayTime = DateTime.now();
+    _accelerometer = accelerometer?.map((e) => (x: e.x, y: e.y, z: e.z));
+    _lifecycle = AppLifecycleListener(onPause: _stopTest);
+  }
 
-    _accelSubscription = _accelerometer?.listen((data) {
-      if (!_isAudioEnabled) return;
-
-      final now = DateTime.now();
-      if (now.difference(_lastPlayTime).inMilliseconds < 100) return;
-
-      final clampedY = data.y.clamp(-10.0, 10.0);
-      final normalized = (clampedY + 10.0) / 20.0;
-      final newFreq = 150.0 + (normalized * 850.0);
-
-      if ((newFreq - _currentFrequency).abs() > 15.0) {
-        _currentFrequency = newFreq;
-        _lastPlayTime = now;
-
-        _soundPlayer.playTone(
-          frequency: _currentFrequency,
-          durationSeconds: 0.1,
-          waveType: WaveType.sine,
-        );
+  Future<void> _toggleTest() async {
+    setState(() => _isTestBusy = true);
+    try {
+      if (_sine.isPlaying) {
+        await _sine.stop();
+      } else {
+        await _sine.start(frequency: 440);
       }
-    });
+    } finally {
+      if (mounted) setState(() => _isTestBusy = false);
+    }
+  }
+
+  Future<void> _stopTest() async {
+    await _sine.stop();
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
-    _accelSubscription?.cancel();
-    _soundPlayer.dispose();
+    _lifecycle.dispose();
+    _sine.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isPlaying = _sine.isPlaying;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('VibeWave Synth'),
-        actions: [
-          IconButton(
-            icon: Icon(_isAudioEnabled ? Icons.volume_up : Icons.volume_off),
-            onPressed: () {
-              setState(() {
-                _isAudioEnabled = !_isAudioEnabled;
-              });
-            },
-          )
-        ],
-      ),
+      appBar: AppBar(title: const Text('VibeWave')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Card(
-            color: _isAudioEnabled ? Colors.indigo.shade50 : null,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    _isAudioEnabled
-                        ? 'Częstotliwość: ${_currentFrequency.round()} Hz'
-                        : 'Włącz dźwięk ikoną w prawym górnym rogu',
-                    style: Theme.of(context).textTheme.titleSmall,
+                  Expanded(
+                    child: Text(
+                      isPlaying ? 'Playing 440 Hz sine' : 'Test tone',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _soundPlayer.playTone(
-                        frequency: 440,
-                        durationSeconds: 0.5,
-                      );
-                    },
-                    child: const Text('Test (440Hz)'),
-                  )
+                  const SizedBox(width: 12),
+                  FilledButton.icon(
+                    onPressed: _isTestBusy ? null : _toggleTest,
+                    icon: Icon(isPlaying ? Icons.stop : Icons.play_arrow),
+                    label: Text(
+                      isPlaying ? 'Stop test' : 'Start test (440 Hz)',
+                    ),
+                  ),
                 ],
               ),
             ),
