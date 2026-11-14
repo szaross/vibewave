@@ -6,6 +6,7 @@ plugins {
 
 android {
     namespace = "com.szaross.vibewave"
+    // compileSdk = 36
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

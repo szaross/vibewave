@@ -62,7 +62,7 @@ The application utilizes built-in motion sensors (gyroscope and accelerometer) t
 | **W02** | Oct 21 – Oct 27 | Flutter project setup (Android + Linux), live gyroscope/accelerometer readout running on a physical phone, CI building a debug APK. |
 | **W03** | Oct 28 – Nov 03 | |
 | **W04** | Nov 04 – Nov 10 | |
-| **W05** | Nov 11 – Nov 17 | |
+| **W05** | Nov 11 – Nov 17 | Finished sensor integration with live gyroscope and accelerometer readings and a 440 Hz sine test tone with a start/stop button. Built the basic waveform synthesizer on flutter_soloud with sine, square, triangle and saw waves at matched loudness. The waveform and pitch change live while the tone plays, and a logarithmic slider sets the frequency from 110 to 880 Hz. |
 | **W06** | Nov 18 – Nov 24 | |
 | **W07** | Nov 25 – Dec 01 | |
 | **W08** | Dec 02 – Dec 08 | |

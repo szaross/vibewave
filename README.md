@@ -6,7 +6,7 @@ See [docs/PROJECT_DESCRIPTION.md](docs/PROJECT_DESCRIPTION.md) for scope, roadma
 
 ## Prerequisites
 
-- [Flutter](https://docs.flutter.dev/get-started/install/linux) (latest stable), e.g. cloned to `~/development/flutter`
+- [Flutter](https://docs.flutter.dev/get-started/install/linux) 3.50.0 (the version CI uses), e.g. cloned to `~/development/flutter`
 - Android SDK with command-line tools (e.g. `~/Android/Sdk`) and accepted licenses: `flutter doctor --android-licenses`
 - For the Linux desktop build:
 
@@ -42,6 +42,16 @@ flutter test
    ```sh
    flutter run
    ```
+
+### Widget previews
+
+Functions annotated with `@Preview` in `lib/previews.dart` render in the Flutter widget previewer, which runs on Flutter Web:
+
+```sh
+flutter widget-preview start --web-server   # then open the printed http://localhost:<port> URL
+```
+
+Without `--web-server` the previewer needs Chrome or Edge. Previews hot reload on save. The Start button doesn't play sound in a preview, because the previewer has no flutter_soloud web setup.
 
 ### Build
 

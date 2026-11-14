@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
-import 'sensor_screen.dart';
+import 'home_screen.dart';
+import 'theme.dart';
 
 void main() {
   runApp(const VibeWaveApp());
@@ -13,13 +14,8 @@ class VibeWaveApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'VibeWave',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
-        ),
-      ),
-      home: const SensorScreen(),
+      theme: vibeWaveTheme,
+      home: const HomeScreen(),
     );
   }
 }

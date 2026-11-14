@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+
+import 'widgets/synth_card.dart';
 
 typedef Vector3 = ({double x, double y, double z});
 
@@ -9,17 +11,17 @@ bool get _sensorsSupported =>
     (defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.iOS);
 
-class SensorScreen extends StatefulWidget {
-  const SensorScreen({super.key, this.gyroscope, this.accelerometer});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key, this.gyroscope, this.accelerometer});
 
   final Stream<GyroscopeEvent>? gyroscope;
   final Stream<AccelerometerEvent>? accelerometer;
 
   @override
-  State<SensorScreen> createState() => _SensorScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _SensorScreenState extends State<SensorScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   Stream<Vector3>? _gyroscope;
   Stream<Vector3>? _accelerometer;
 
@@ -49,6 +51,8 @@ class _SensorScreenState extends State<SensorScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          const SynthCard(),
+          const SizedBox(height: 16),
           _SensorCard(title: 'Gyroscope', unit: 'rad/s', stream: _gyroscope),
           const SizedBox(height: 16),
           _SensorCard(
