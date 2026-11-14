@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../audio/frequency_scale.dart';
 import '../audio/synth_player.dart';

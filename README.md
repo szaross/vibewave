@@ -6,7 +6,7 @@ See [docs/PROJECT_DESCRIPTION.md](docs/PROJECT_DESCRIPTION.md) for scope, roadma
 
 ## Prerequisites
 
-- [Flutter](https://docs.flutter.dev/get-started/install/linux) (latest stable), e.g. cloned to `~/development/flutter`
+- [Flutter](https://docs.flutter.dev/get-started/install/linux) 3.50.0 (the version CI uses), e.g. cloned to `~/development/flutter`
 - Android SDK with command-line tools (e.g. `~/Android/Sdk`) and accepted licenses: `flutter doctor --android-licenses`
 - For the Linux desktop build:
 

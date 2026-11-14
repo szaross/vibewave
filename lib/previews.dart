@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 import 'home_screen.dart';
