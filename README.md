@@ -43,6 +43,16 @@ flutter test
    flutter run
    ```
 
+### Widget previews
+
+Functions annotated with `@Preview` in `lib/previews.dart` render in the Flutter widget previewer, which runs on Flutter Web:
+
+```sh
+flutter widget-preview start --web-server   # then open the printed http://localhost:<port> URL
+```
+
+Without `--web-server` the previewer needs Chrome or Edge. Previews hot reload on save. The Start button doesn't play sound in a preview, because the previewer has no flutter_soloud web setup.
+
 ### Build
 
 ```sh
