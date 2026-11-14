@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'sensor_screen.dart';
+import 'home_screen.dart';
 
 void main() {
   runApp(const VibeWaveApp());
@@ -19,7 +19,7 @@ class VibeWaveApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
       ),
-      home: const SensorScreen(),
+      home: const HomeScreen(),
     );
   }
 }
