@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:vibewave/audio/synth_player.dart';
 
 import 'widgets/synth_card.dart';
 
@@ -22,8 +26,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final SynthPlayer _player = SynthPlayer();
+
   Stream<Vector3>? _gyroscope;
   Stream<Vector3>? _accelerometer;
+
+  StreamSubscription<Vector3>? _accelSub;
+  StreamSubscription<Vector3>? _gyroSub;
+
+  double _smoothTiltY = 0.0;
+  double _smoothGyroEnergy = 0.0;
 
   @override
   void initState() {
@@ -31,17 +43,59 @@ class _HomeScreenState extends State<HomeScreen> {
     final gyroscope =
         widget.gyroscope ??
         (_sensorsSupported
-            ? gyroscopeEventStream(samplingPeriod: SensorInterval.uiInterval)
+            ? gyroscopeEventStream(samplingPeriod: SensorInterval.gameInterval)
             : null);
     final accelerometer =
         widget.accelerometer ??
         (_sensorsSupported
             ? accelerometerEventStream(
-                samplingPeriod: SensorInterval.uiInterval,
+                samplingPeriod: SensorInterval.gameInterval,
               )
             : null);
-    _gyroscope = gyroscope?.map((e) => (x: e.x, y: e.y, z: e.z));
-    _accelerometer = accelerometer?.map((e) => (x: e.x, y: e.y, z: e.z));
+
+    _gyroscope = gyroscope
+        ?.map((e) => (x: e.x, y: e.y, z: e.z))
+        .asBroadcastStream();
+    _accelerometer = accelerometer
+        ?.map((e) => (x: e.x, y: e.y, z: e.z))
+        .asBroadcastStream();
+
+    _startSensorAudioMapping();
+  }
+
+  void _startSensorAudioMapping() {
+    _accelSub = _accelerometer?.listen((accel) {
+      _smoothTiltY = _smoothTiltY * 0.8 + accel.y * 0.2;
+
+      final normalized = ((_smoothTiltY + 9.8) / 19.6).clamp(0.0, 1.0);
+      const minFreq = 110.0; // A2
+      const maxFreq = 880.0; // A5
+      final freq = minFreq * math.pow(maxFreq / minFreq, normalized);
+
+      if (_player.isPlaying) {
+        _player.setFrequency(freq.toDouble());
+      }
+    });
+
+    _gyroSub = _gyroscope?.listen((gyro) {
+      final energy = math.sqrt(
+        gyro.x * gyro.x + gyro.y * gyro.y + gyro.z * gyro.z,
+      );
+      _smoothGyroEnergy = _smoothGyroEnergy * 0.85 + energy * 0.15;
+
+      if (_player.isPlaying) {
+        final modDepth = ((_smoothGyroEnergy - 0.3) / 3.7).clamp(0.0, 1.0);
+        _player.setModulation(modDepth);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _accelSub?.cancel();
+    _gyroSub?.cancel();
+    _player.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const SynthCard(),
+          SynthCard(player: _player),
           const SizedBox(height: 16),
           _SensorCard(title: 'Gyroscope', unit: 'rad/s', stream: _gyroscope),
           const SizedBox(height: 16),
@@ -65,7 +119,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
 class _SensorCard extends StatelessWidget {
   const _SensorCard({
     required this.title,

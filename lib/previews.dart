@@ -1,6 +1,7 @@
 import 'package:flutter/widget_previews.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:vibewave/audio/synth_player.dart';
 
 import 'home_screen.dart';
 import 'theme.dart';
@@ -35,4 +36,4 @@ Widget homeScreenNoSensorsPreview() => const HomeScreen();
   size: Size.fromWidth(400),
   wrapper: vibeWaveThemed,
 )
-Widget synthCardPreview() => const SynthCard();
+Widget synthCardPreview() => SynthCard(player: SynthPlayer());
